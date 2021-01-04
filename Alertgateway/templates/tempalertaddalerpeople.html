@@ -1,0 +1,104 @@
+{{ define "tempalertaddalerpeople.html" }}
+
+
+
+{{ template "header" }}
+
+
+
+
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row">
+                <form class="layui-form">
+                    <div class="layui-form-item">
+                        <label for="L_Account" class="layui-form-label">
+                            <span class="x-red">*</span>所属人</label>
+
+
+                               <!-- 用户添加从ldap中获取 -->
+<!-- 
+                            <div class="col-md-offset-4" style="margin-left:70px">
+                                <div  style="margin-top: 25px;">
+                                  <label class="form-label col-2"><span style="color:red">*</span>多选域名</label>
+                                    <div class="formControls col-2">
+                            
+                                        <div id="domains"></div>
+                            
+                            
+                            
+                            
+                                    </div>
+                                </div>
+                            
+                            </div> -->
+                            <!-- 用户添加从ldap中获取 -->
+                        <div class="layui-input-inline">
+                            <input type="text" id="L_user" name="account" required="" lay-verify="account" autocomplete="off" class="layui-input" value="{{.belongname}}" readonly></div>
+                        <div class="layui-form-mid layui-word-aux">
+                            <span class="x-red">*</span>电话号码为通知人的电话,进行报警通知!</div></div>
+                 <!--   <div class="layui-form-item">
+                        <label for="L_username" class="layui-form-label">
+                            <span class="x-red">*</span>昵称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="L_username" name="username" required="" lay-verify="nikename" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    -->
+                    <div class="layui-form-item">
+                        <label for="L_tel" class="layui-form-label">
+                            <span class="x-red">*</span>电话</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="L_tel" name="pass" value="{{.cnumber}}" required="" lay-verify="pass" autocomplete="off" class="layui-input"></div>
+                        <div class="layui-form-mid layui-word-aux">所属人电话</div></div>
+      
+                    <div class="layui-form-item">
+                        <label for="L_repass" class="layui-form-label"></label>
+                        <button class="layui-btn" lay-filter="add" lay-submit="">确认修改</button></div>
+                </form>
+            </div>
+        </div>
+        <script>layui.use(['form', 'layer','jquery'],
+            function() {
+                $ = layui.jquery;
+                var form = layui.form,
+                layer = layui.layer;
+
+
+                //监听提交
+                form.on('submit(add)',
+                function(data) {
+                    var L_user = $("#L_user").val()
+                    var L_tel = $("#L_tel").val()
+
+                    $.post("/api/ajax/updatetel",{"L_user":L_user,"L_tel":L_tel},function(data){
+                       if (data.code==200){
+                          layer.alert("修改成功", {
+                            icon: 6
+                        },
+                        function() {
+                            //关闭当前frame
+                            xadmin.close();
+
+                            // 可以对父窗口进行刷新
+                            xadmin.father_reload();
+                        });
+                       } else{
+
+                           layer.alert(data.message, {
+                            icon: 2
+                            });
+
+                       }
+                    });
+
+
+                    return false;
+                });
+
+            });</script>
+      
+    </body>
+
+</html>
+
+{{ end }}

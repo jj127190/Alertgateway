@@ -1,0 +1,146 @@
+{{ define "alertTempAdd.html" }}
+
+
+
+{{ template "header" }}
+
+<!-- <script type="text/javascript" src="../assets/xm-select/dist/xm-select.js"></script>
+<script type="text/javascript" src="../assets/js/jquery.min.js"></script>
+
+<script type="text/javascript" src="../assets/js/xadmin.js"></script>
+
+
+
+
+
+<link rel="stylesheet" href="../assets/css/font.css">
+      
+
+<script src="../assets/lib/layui/layui.js" charset="utf-8"></script>
+<link rel="stylesheet" href="../assets/lib/layui/css/layui.css">
+<script type="text/javascript" src="../assets/js/xadmin.js"></script>
+
+<script type="text/javascript" src="../assets/js/jquery.min.js"></script>
+
+
+
+
+<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+<script>
+   
+domains = xmSelect.render({
+    el: '#domains',
+    empty: '呀, 没有数据呢',
+    tips: '目前的域名:',
+    filterable: true,
+    // direction: 'up',
+    searchTips: '搜索域名',
+    language: 'zn',
+    theme: {
+    color: '#1cbbb4',
+    },
+    style: {
+    // marginLeft: '200px',
+    width:'250px',
+    borderRadius: '40px',
+    height: '35px',
+
+    },
+    template({ item, sels, name, value }){
+    return item.name  + '<span style="position: absolute; right: 10px; color: #8799a3">'+value+'</span>' 
+    },
+    prop: {
+    name: 'value',
+    },
+    // data: dolists
+    data: [
+        {name: 'xx', value: 4,showname:'xx',},
+    ]
+})
+
+</script> -->
+
+
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row">
+                <form class="layui-form">
+                    <div class="layui-form-item">
+                        <label for="T_name" class="layui-form-label">
+                            <span class="x-red">*</span>模板名称</label>
+
+
+                     
+
+                        <div class="layui-input-inline">
+                            <input type="text" id="T_name" name="account" required=""  autocomplete="off" class="layui-input"></div>
+                        <div class="layui-form-mid layui-word-aux">
+                            <span class="x-red">*</span>此为模板名称;需要在电话报警的时候添加到${name}参数中!</div></div>
+
+
+
+             
+                    <div class="layui-form-item">
+                        <label for="T_content" class="layui-form-label">
+                            <!-- <span class="x-red">*</span> -->
+                            报警内容</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="T_content" name="pass" required="" autocomplete="off" class="layui-input"></div>
+                        <div class="layui-form-mid layui-word-aux"><span class="x-red">*</span>--自定义选填!-- 此为报警的内容,在电话报警的时候传参${content} </div>
+                        
+                    </div>
+
+                
+
+
+                    <div class="layui-form-item">
+                        <label for="" class="layui-form-label"></label>
+                        <button class="layui-btn" lay-filter="add" lay-submit="">添加</button></div>
+                </form>
+            </div>
+        </div>
+        <script>layui.use(['form', 'layer','jquery'],
+            function() {
+                $ = layui.jquery;
+                var form = layui.form,
+                layer = layui.layer;
+
+                form.on('submit(add)',
+                function(data) {
+                  
+                    var T_name = $("#T_name").val()
+                    var T_content = $("#T_content").val()
+                 
+                    $.post("/api/ajax/addalerttemp",{"T_name":T_name,"T_content":T_content},function(data){
+                       if (data.code==200){
+                          layer.alert("增加成功", {
+                            icon: 6
+                        },
+                        function() {
+                            //关闭当前frame
+                            xadmin.close();
+
+                            // 可以对父窗口进行刷新
+                            xadmin.father_reload();
+                        });
+                       } else{
+
+                           layer.alert(data.message, {
+                            icon: 2
+                            });
+
+                       }
+                    });
+
+
+                    return false;
+                });
+
+            });</script>
+      
+    </body>
+
+</html>
+
+{{ end }}

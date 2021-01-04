@@ -1,0 +1,133 @@
+{{ define "addtemalertpeople.html" }}
+{{ template "header" }}
+
+<script type="text/javascript" src="../assets/xm-select/dist/xm-select.js"></script>
+
+    <body>
+        <input type="text" id="inputnonealp" value="{{.jsonRes}}" style="display: none;">
+        <input type="text" id="tempid" value="{{.tempid}}" style="display: none;">
+        <div class="layui-fluid">
+            <div class="layui-row">
+                <form class="layui-form">
+                    <div class="layui-form-item">
+                        <label for="L_Account" class="layui-form-label">
+                            <span class="x-red">*</span>报警人:</label>
+                            <div class="layui-form-mid layui-word-aux">
+                                <span class="x-red">*</span>当前模板已存的报警人,可再次编辑!</div>
+
+                            <div class="layui-form layui-form-pane" action="">
+                                <div class="layui-form-item">
+                                    
+                                    <div class="layui-input-block">
+                                        <div id="alertpeoples"></div>
+                                      
+                                    </div>
+                                </div>
+                            </div>
+
+                    <div class="layui-form-item">
+                        <label for="L_repass" class="layui-form-label"></label>
+                        <button class="layui-btn" lay-filter="add" lay-submit="">确认修改</button></div>
+                </form>
+            </div>
+        </div>
+        <script>layui.use(['form', 'layer','jquery'],
+            function() {
+                $ = layui.jquery;
+                var form = layui.form,
+                layer = layui.layer;
+
+
+                //监听提交
+                form.on('submit(add)',
+                function(data) {
+
+                    var tempid = $("#tempid").val()
+                    var selectArr = alertpeoples.getValue();
+                    var data = ""
+                  
+                    $.each(selectArr,function(index,value){
+                        // alert(JSON.stringify(value))
+                        // alert(value.name)
+                        data = data  + value.name + ","
+                    })
+                   
+            
+                    $.post("/api/ajax/temaddalpeo",{"data":data,"tempid":tempid},function(data){
+                       if (data.code==200){
+                          layer.alert("修改成功", {
+                            icon: 6
+                        },
+                        function() {
+                            //关闭当前frame
+                            xadmin.close();
+
+                            // 可以对父窗口进行刷新
+                            xadmin.father_reload();
+                        });
+                       } else{
+
+                           layer.alert(data.message, {
+                            icon: 2
+                            });
+
+                       }
+                    });
+
+
+                    return false;
+                });
+
+            });</script>
+
+
+
+
+
+<script>
+    var selectxmdata = $("#inputnonealp").val()
+    var selectdata = JSON.parse(selectxmdata)
+    var alertpeoples = xmSelect.render({
+    el: '#alertpeoples',
+    empty: '没有数据',
+    tips: '请选择当前模板报警关联人!',
+    filterable: true,
+    // direction: 'up',
+    searchTips: '报警人!',
+    language: 'zn',
+    theme: {
+    color: '#1cbbb4',
+  },
+    style: {
+    // marginLeft: '200px',
+    width:'250px',
+    borderRadius: '40px',
+    height: '35px',
+
+  },
+  template({ item, sels, name, value }){
+    return item.name  + '<span style="position: absolute; right: 10px; color: #8799a3">'+value+'</span>' 
+  },
+  prop: {
+    name: 'value',
+  },
+    data:selectdata
+    // data: [
+    // {name: '水果', value: 1, showname:'123',selected: true, disabled: true},
+    // {name: '蔬菜', value: 2, showname:'123',selected: true},
+    // {name: '桌子', value: 3, showname:'123',disabled: true},
+    // {name: '北京', value: 4,showname:'123',},
+    // ]
+  })
+
+
+//   console.log(alertpeoples.options.data)
+
+</script>
+
+      
+    </body>
+
+</html>
+
+{{ end }}
